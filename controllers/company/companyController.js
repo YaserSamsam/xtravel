@@ -65,7 +65,7 @@ const customerGetCustomerReservations=async(req,res,next)=>{
     res.status(200).json({
         trips:customerTrips
     });
-    } catch(err){
+    }catch(err){
       if(!err.statusCode)
          err.statusCode=500;
       next(err);
@@ -97,7 +97,7 @@ const customerRemoveCustomerReservation=async(req,res,next)=>{
            res.status(200).json({
               trips:customerTrips
            });
-      } catch(err){
+      }catch(err){
         if(!err.statusCode)
               err.statusCode=500;
         next(err);
@@ -120,22 +120,32 @@ const customerDeleteCustomer=async(req,res,next)=>{
 };
 
 const customerUpdateCustomer=async(req,res,next)=>{
-        const customer=req.body.user;
+        const id_=req.body.Id_;
+        const name=req.body.name;
+        const fathername=req.body.fathername;
+        const mothername=req.body.mothername;
+        const birthdate=req.body.birthdate;
+        const address=req.body.address;
+        const iss=req.body.iss;
+        const trip_availabel=req.body.trip_availabel;
+        const username=req.body.username;
+        const password=req.body.password;
+        const registration_date="dddd";
         // validation
         // ...
         //
         try{
-        let custm=await customers.findOne({where:{customer_id:customer.customer_id}});
-        custm.name=customer.name;
-        custm.fathername=customer.fathername;
-        custm.mothername=customer.mothername;
-        custm.birthdate=customer.birthdate;
-        custm.address=customer.address;
-        custm.iss=customer.iss;
-        custm.trip_availabel=customer.trip_availabel;
-        custm.username=customer.username;
-        custm.password=customer.password;
-        custm.registration_date=customer.registration_date;
+        let custm=await customers.findOne({where:{customer_id:id_}});
+        custm.name=name;
+        custm.fathername=fathername;
+        custm.mothername=mothername;
+        custm.birthdate=birthdate;
+        custm.address=address;
+        custm.iss=iss;
+        custm.trip_availabel=trip_availabel;
+        custm.username=username;
+        custm.password=password;
+        custm.registration_date=registration_date;
         custm.save();
         res.status(200).json({
             message:"update success !! "
@@ -177,56 +187,11 @@ const customerAddNewBalanceToCustomer=async(req,res,next)=>{
        res.status(200).json({
         user:custm[0]
        });
-     } catch(err){
+     }catch(err){
         if(!err.statusCode)
              err.statusCode=500;
         next(err);
      }
-};
-
-const customerAddCustomer=async(req,res,next)=>{
-    const user=req.body.user;
-    // validation
-    // 
-    const days=[
-        "SUN",
-        "MON",
-        "TUE",
-        "WED",
-        "THU",
-        "FRI",
-        "SAT",
-    ];
-    let reservationDate=new Date();
-    reservationDate=
-             reservationDate.getFullYear()+"/"+
-             (reservationDate.getMonth()+1)+"/"+
-             reservationDate.getDate()+" "+
-             days[reservationDate.getDay()]+" "+
-             reservationDate.getHours()+":"+
-             reservationDate.getMinutes()+":"+
-             reservationDate.getSeconds();
-    try{
-        await customers.create({
-           name:user.name
-           ,fathername:user.fathername
-           ,mothername:user.mothername
-           ,birthdate:user.birthdate
-           ,address:user.address
-           ,iss:user.iss
-           ,trip_availabel:user.trip_availabel
-           ,username:user.username
-           ,password:user.password
-           ,registration_date:reservationDate
-        });
-        res.status(201).json({
-           message:"customer added success"
-        });
-    }catch(err){
-        if(!err.statusCode)
-            err.statusCode=500;
-        next(err);
-    }
 };
 
 const tripGetAllTrips=async(req,res,next)=>{
@@ -271,10 +236,15 @@ const tripGetBusesId=async(req,res,next)=>{
 };
 
 const tripAddTrip=async(req,res,next)=>{
-        const date=req.body.date;
-        const destination=req.body.destination;
-        const start_station=req.body.start_station;
-        const bus_num=req.body.bus_num;
+    console.log("rrrrrrrrrrrrrrrrr");
+    console.log(req.body);
+    console.log("rrrrrrrrrrrrrrrrr");
+    const date=req.body.date;
+    const bus_num=req.body.bus_num;
+    const destination=req.body.destination;
+    const start_station=req.body.start_station;
+
+        const addTrip=req.body.trip;
         // validation
         // 
     try{
@@ -291,9 +261,9 @@ const tripAddTrip=async(req,res,next)=>{
     }catch(err){
         if(!err.statusCode)
             err.statusCode=500;
-        console.log(err);
         next(err);
     }
+
 };
 
 const tripGetTripInfo=async(req,res,next)=>{
@@ -402,6 +372,42 @@ const tripDeleteTrip=async(req,res,next)=>{
     }catch(err){
         if(!err.statusCode)
            err.statusCode=500;
+        next(err);
+    }
+};
+
+const customerAddCustomer=async(req,res,next)=>{
+const name = req.body.name;
+const fathername=req.body.fathername;
+const mothername=req.body.mothername;
+const birthdate=req.body.birthdate;
+const address=req.body.address;
+const iss=req.body.iss;
+const trip_availabel=req.body.trip_availabel;
+const username=req.body.username;
+const password=req.body.password;
+const registration_date=req.body.registration_date;
+        // validation
+        // 
+    try{
+        await customers.create({
+            name:name
+            ,fathername:fathername
+            ,mothername:mothername
+            ,birthdate:birthdate
+            ,address:address
+            ,iss:iss
+            ,trip_availabel:trip_availabel
+            ,username:username
+            ,password:password
+            ,registration_date:registration_date
+        });
+        res.status(201).json({
+            message:"customer added success"
+        });
+    }catch(err){
+        if(!err.statusCode)
+             err.statusCode=500;
         next(err);
     }
 };
@@ -516,40 +522,6 @@ const busAddBus=async(req,res,next)=>{
     }
    };
 
-const updateTrip=async(req,res,next)=>{
-
-    const trip_id=req.params.trip_id;
-    const date=req.body.date;
-    const destination=req.body.destination;
-    const start_station=req.body.start_station;
-    const bus_num=req.body.bus_num;
-    // validation
-    // 
-try{
-    const Trip=await trip.findOne({where:{trip_id:trip_id}});
-    if(Trip==null){
-        const err=new Error('no trip with this id');
-        err.statusCode=404;
-        throw err;
-    }
-    busTrip=await bus.findOne({where:{bus_num:bus_num}});
-        Trip.date=date,
-        Trip.availabel_sets=busTrip.sets_num,
-        Trip.destination=destination,
-        Trip.start_station=start_station,
-        Trip.busBusNum=bus_num;
-        await Trip.save();
-    res.status(201).json({
-        message:"upddate success"
-    });
-}catch(err){
-    if(!err.statusCode)
-        err.statusCode=500;
-    console.log(err);
-    next(err);
-}
-};
-
 module.exports={
     customerGetAllCustomers,
     customerGetCustomer,
@@ -570,6 +542,5 @@ module.exports={
     busGetBusInfo,
     busUpdateBus,
     busRemoveBus,
-    busAddBus,
-    updateTrip
+    busAddBus
 }
